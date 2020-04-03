@@ -2,31 +2,36 @@ var API_KEY = '';
 var SPREADSHEET_ID = '';
 var RESULTS_PER_PAGE = 5;
 
+
 function doGet(e) {
-  if (!isAuthorized(e)) {
+ if (!isAuthorized(e)) {
+   console.log(e);
     return buildErrorResponse('not authorized');
-  }
-  
-  var options = {
-    page: getPageParam(e),
-    category: getCategoryParam(e)
-  }
+ }
   
   var spreadsheet = SpreadsheetApp.openById(SPREADSHEET_ID);
   var worksheet = spreadsheet.getSheets()[0];
-  var rows = worksheet.getDataRange().sort({column: 2, ascending: false}).getValues();
 
-  var headings = rows[0].map(String.toLowerCase);
-  var posts = rows.slice(1);
-  
-  var postsWithHeadings = addHeadings(posts, headings);
-  var postsPublic = removeDrafts(postsWithHeadings);
-  var postsFiltered = filter(postsPublic, options.category);
-  
-  var paginated = paginate(postsFiltered, options.page);
-    
-  return buildSuccessResponse(paginated.posts, paginated.pages);
+  var paginated = dataBind(e,worksheet);
+
+  return buildSuccessResponse(paginated.posts,  paginated.pages);
 }
+
+function dataBind(e,worksheet){
+   var options = {
+    page: getPageParam(e),
+    category: getCategoryParam(e)
+  }
+  var rows = worksheet.getDataRange().getValues();
+  var headings = rows[0];
+  var posts = rows.slice(1);  
+  var postsWithHeadings = addHeadings(posts, headings);
+  //var postsPublic = removeDrafts(postsWithHeadings);
+  //var postsFiltered = filter(postsWithHeadings, options.category);
+  
+  return paginated = paginate(postsWithHeadings, options.page);
+}
+
 
 function addHeadings(posts, headings) {
   return posts.map(function(postAsArray) {
@@ -114,7 +119,7 @@ function getCategoryParam(e) {
 function buildSuccessResponse(posts, pages) {
   var output = JSON.stringify({
     status: 'success',
-    data: posts,
+    posts: posts,    
     pages: pages
   });
   

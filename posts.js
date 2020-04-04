@@ -1,9 +1,9 @@
 const app = function () {
 	/******API URL ADD HERE*******/
-	const API_BASE = 'https://script.google.com/macros/s/AKfycbxZ1zEqZPNIRA8l5DUEplJN0MxTxcH9ST2B8aNoCt2aXAkpkU8/exec';
+	const API_BASE = '';
 	
 	/******Secrate key that you added on google sheet*******/
-	const API_KEY = 'thecodepractive';
+	const API_KEY = '';
 	
 	/******Add Category here the same category should be in the google sheet*******/
 	const CATEGORIES = ['php', 'jquery', 'laravel', 'angular'];
